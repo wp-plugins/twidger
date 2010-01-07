@@ -1,9 +1,9 @@
 === Twidger ===
 Contributors: laurentlasalle
 Tags: twitter, avatar, widget, tweet
-Requires at least: 
-Tested up to: 
-Stable tag: 
+Requires at least: 2.7
+Tested up to: 2.9
+Stable tag: 0.2.1
 
 Display messages with associated usernames and avatars from a Twitter search through a widget.
 
