@@ -26,5 +26,8 @@ Installing this plugin is easy.
 
 == Changes ==
 
+= 0.2.1 =
+* Bugfix of the missing trailing slash for the stylesheet URL.
+
 = 0.2 =
 * Initial version. This plugin is still in beta. Please leave feedback to twidger@laurentlasalle.com
