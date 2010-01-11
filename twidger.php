@@ -3,7 +3,7 @@
 Plugin Name: Twidger
 Plugin URI: http://mesparolessenvolent.com/twidger
 Description: Display messages with associated usernames and avatars from a Twitter search through a widget.
-Version: 0.2.1
+Version: 0.3.0
 Author: Laurent LaSalle
 Author URI: http://laurentlasalle.com
 License: GPL
@@ -18,7 +18,7 @@ This plugin requires cURL to be running on the server. I am NOT a programmer, if
 want to fix things, suit yourself. Special thanks to Marc Boivin.
 
 THINGS TO DO (please help)
-1. Add cache functionality
+1. Add cache functionality — DONE by Marc Boivin (0.3.0)
 2. Add display settings in the widget options (no avatars, enable links inside the tweet, etc.)
 
 LICENSE
@@ -36,6 +36,11 @@ Fifth Floor, Boston, MA  02110-1301, USA.
 
 http://www.gnu.org/licenses/gpl.html
 */
+
+
+// Define some constants
+define('TWEDGER_CACHE_TIMEOUT', 120); // In seconds
+define('TWEDGER_CACHE_FOLDER', '/tmp/'); // Don't forget the trailling slash (/)
 
 function add_twidgerstyle() {
 	echo "\r\t<link rel=\"stylesheet\" href=\"";
@@ -80,6 +85,7 @@ class twidger_Widget extends WP_Widget {
 		$title = apply_filters('widget_title', $instance['title']);
 		$intro = $instance['intro'];
 		$term = $instance['term'];
+        $cache = $instance['cache'];
 
 		// Before widget (defined by themes).
 		echo "\r".$before_widget;
@@ -91,24 +97,36 @@ class twidger_Widget extends WP_Widget {
 		// Display introduction text from widget settings if one was input.
 		if ($intro)
 			echo "\r\t<p>".$intro."</p>";
-			
-		// Display the search results.
-		echo "\r\t<ul>";
-		require_once('twidger-search.php');
+		if($cache){
+            echo 'we have caching';
+            include('libs/cache/Lite.php');
+            $cache_id = $widget_id;
 
-		$search = new TwitterSearch($term);
-		$results = $search->results();
-	
-		foreach($results as $result) {
-			echo "\r\t\t<li>\r\t\t\t<a href=\"http://www.twitter.com/".$result->from_user."/status/".$result->id."\" class=\"tweet\">";
-			echo "\r\t\t\t\t<img src=\"".$result->profile_image_url."\" class=\"twitter_image\" alt=\"".$result->from_user."'s avatar\" />";
-			echo "\r\t\t\t\t<strong>".$result->from_user."&nbsp;: </strong>";
-			$text_n = toLink($result->text);
-			echo $text_n;
-			echo "\r\t\t\t</a>\r\t\t</li>";
-		}
-		
-		echo "\r\t</ul>";
+            $options = array(
+                'cacheDir' => TWEDGER_CACHE_FOLDER,
+                'lifeTime' => TWEDGER_CACHE_TIMEOUT
+            );
+
+            $Cache_Lite = new Cache_Lite($options);
+
+            if ($data = $Cache_Lite->get($id)) {
+                // Cache hit
+                echo 'We have cache';
+                echo $data;
+            }else{
+                $data = $this->get_query_html($term);
+                $Cache_Lite->save($data);
+                echo 'Creating cache entry';
+                echo $data;
+            }
+            
+        }else{
+            // No caching we run the query every time
+            echo 'We are not caching';
+            echo $this->get_query_html($term);
+        }	
+        
+        
 
 		// After widget (defined by themes).
 		echo $after_widget;
@@ -128,7 +146,7 @@ class twidger_Widget extends WP_Widget {
 	function form($instance) {
 
 		// Set up some default widget settings.
-		$defaults = array('title' => __('Twitter', 'twidger'), 'intro' => __('Follow @laurent on Twitter...', 'twidger'), 'term' => '@laurent ');
+		$defaults = array('title' => __('Twitter', 'twidger'), 'intro' => __('Follow @laurent on Twitter...', 'twidger'), 'term' => '@laurent ', 'cache' => 0);
 		$instance = wp_parse_args((array) $instance, $defaults); ?>
 
 		<!-- Widget Title: Text Input -->
@@ -147,6 +165,35 @@ class twidger_Widget extends WP_Widget {
 		<p>
 			<label for="<?php echo $this->get_field_id('term'); ?>"><?php _e('Query:', 'twidger'); ?></label>
 			<input id="<?php echo $this->get_field_id('term'); ?>" name="<?php echo $this->get_field_name('term'); ?>" value="<?php echo $instance['term']; ?>" style="width: 100%;" />
-		</p><?php
+		</p>
+
+        <!-- Enable cache: Text Input -->
+		<p>
+			<label for="<?php echo $this->get_field_id('cache'); ?>"><?php _e('Enable cache:', 'twidger'); ?></label>
+			<input id="<?php echo $this->get_field_id('cache'); ?>" name="<?php echo $this->get_field_name('cache'); ?>" <?php checked( $instance['cache'], true ); ?> type="checkbox" />
+		</p>
+
+    <?php
 	}
+
+    function get_query_html($query){
+        // Display the search results.
+		$return = "\r\t<ul>";
+		require_once('twidger-search.php');
+
+		$search = new TwitterSearch($query);
+		$results = $search->results();
+		foreach($results as $result) {
+			$return .= "\r\t\t<li>\r\t\t\t<a href=\"http://www.twitter.com/".$result->from_user."/status/".$result->id."\" class=\"tweet\">";
+			$return .= "\r\t\t\t\t<img src=\"".$result->profile_image_url."\" class=\"twitter_image\" alt=\"".$result->from_user."'s avatar\" />";
+			$return .= "\r\t\t\t\t<strong>".$result->from_user."&nbsp;: </strong>";
+			$text_n = toLink($result->text);
+			$return .= $text_n;
+			$return .= "\r\t\t\t</a>\r\t\t</li>";
+		}
+		
+		$return .= "\r\t</ul>";
+
+        return $return; 
+    }
 }
