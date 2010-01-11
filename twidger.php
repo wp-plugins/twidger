@@ -3,7 +3,7 @@
 Plugin Name: Twidger
 Plugin URI: http://mesparolessenvolent.com/twidger
 Description: Display messages with associated usernames and avatars from a Twitter search through a widget.
-Version: 0.3.0
+Version: 0.3.1
 Author: Laurent LaSalle
 Author URI: http://laurentlasalle.com
 License: GPL
@@ -98,7 +98,6 @@ class twidger_Widget extends WP_Widget {
 		if ($intro)
 			echo "\r\t<p>".$intro."</p>";
 		if($cache){
-            echo 'we have caching';
             include('libs/cache/Lite.php');
             $cache_id = $widget_id;
 
@@ -111,18 +110,15 @@ class twidger_Widget extends WP_Widget {
 
             if ($data = $Cache_Lite->get($id)) {
                 // Cache hit
-                echo 'We have cache';
                 echo $data;
             }else{
                 $data = $this->get_query_html($term);
                 $Cache_Lite->save($data);
-                echo 'Creating cache entry';
                 echo $data;
             }
             
         }else{
             // No caching we run the query every time
-            echo 'We are not caching';
             echo $this->get_query_html($term);
         }	
         

@@ -1,9 +1,9 @@
 === Twidger ===
-Contributors: laurentlasalle
+Contributors: laurentlasalle, marcboivin
 Tags: twitter, avatar, widget, tweet
 Requires at least: 2.7
 Tested up to: 2.9
-Stable tag: 0.3.0
+Stable tag: 0.3.1
 
 Display messages with associated usernames and avatars from a Twitter search through a widget.
 
@@ -26,7 +26,7 @@ Installing this plugin is easy.
 
 == Changes ==
 
-= 0.3.0 =
+= 0.3.1 =
 * Added cache functionnality (thanks to Marc Boivin).
 
 = 0.2.1 =
