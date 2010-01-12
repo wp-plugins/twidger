@@ -3,7 +3,7 @@
 Plugin Name: Twidger
 Plugin URI: http://mesparolessenvolent.com/twidger
 Description: Display messages with associated usernames and avatars from a Twitter search through a widget.
-Version: 0.3.1
+Version: 0.3.2
 Author: Laurent LaSalle
 Author URI: http://laurentlasalle.com
 License: GPL
@@ -44,7 +44,7 @@ define('TWEDGER_CACHE_FOLDER', '/tmp/'); // Don't forget the trailling slash (/)
 
 function add_twidgerstyle() {
 	echo "\r\t<link rel=\"stylesheet\" href=\"";
-	bloginfo('siteurl');
+	bloginfo('url');
 	echo "/wp-content/plugins/twidger/twidger-style.css\" type=\"text/css\" media=\"screen\" />\r";
 }
 
