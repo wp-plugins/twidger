@@ -3,15 +3,17 @@ Contributors: laurentlasalle, marcboivin
 Tags: twitter, avatar, widget, tweet
 Requires at least: 2.7
 Tested up to: 2.9
-Stable tag: 0.3.2
+Stable tag: 0.3.3
 
-Display messages with associated usernames and avatars from a Twitter search through a widget.
+A Twitter widget that display messages with associated usernames and avatars from a Twitter search results.
 
 == Description ==
 
-Here's a small WordPress plugin that allows you to display messages with usernames and avatars from a Twitter search. An easy way to display the latest tweets containing specific keywords or usernames.
+Twitter + Widget = Twidger
 
-This plugin reuses code from [Antonio “Woork” Lupetti](http://woork.blogspot.com/2009/06/simple-php-twitter-search-ready-to-use.html), [Ryan Faerman](http://ryanfaerman.com/twittersearch/) and [David Billingham](http://davidbillingham.name).
+Here's a small WordPress plugin that allows you to display messages with usernames and avatars from a Twitter search results. An easy way to display the latest tweets containing specific keywords or usernames.
+
+This plugin reuses code from Antonio "Woork" Lupetti ([Simple PHP Twitter Search ready to use in your web projects](http://woork.blogspot.com/2009/06/simple-php-twitter-search-ready-to-use.html)), Ryan Faerman ([PHP Twitter Search API](http://ryanfaerman.com/twittersearch/)) and [David Billingham](http://davidbillingham.name).
 
 This plugin requires [cURL](http://en.wikipedia.org/wiki/CURL) to be running on the server. I am NOT a programmer, if you want to fix things, suit yourself. Special thanks to [Marc Boivin](http://mboivin.com).
 
@@ -25,6 +27,9 @@ Installing this plugin is easy.
 4. Change the settings according to what you want to display.
 
 == Changes ==
+
+= 0.3.3 =
+* Changed default values.
 
 = 0.3.2 =
 * Fixed missing directory and bugfix for incompatibility with qTranslate.
