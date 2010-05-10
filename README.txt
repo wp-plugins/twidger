@@ -28,6 +28,9 @@ Installing this plugin is easy.
 
 == Changes ==
 
+= 0.4.0 =
+* Added a bunch of functionnalities: show/hide avatars, use one global link or not, intro/outro message, maximum tweets.
+
 = 0.3.3 =
 * Changed default values.
 
